@@ -104,7 +104,7 @@ def process_photo(update, context):
 
 # Dumpers info
 def yellow_info(update, context):
-    update.message.reply_text("y")
+    update.message.reply_text("Inside the yellow container, we must deposit: plastic bottles and containers, metal containers and briks such as:\n- Plastic bottles\n- Cans\n- Plastic, metal and sheet metal caps\n- Aluminum trays\n- Film and aluminum foil\n- Aerosol sprays\n- Deodorant cans\n- Plastic bags (except garbage bags)\n- Tubs and yogurt lids\n- Briks: of milk, juices, soups, etc.\n- Cork trays\n- Toothpaste tubes")
 
     return INFO
 
