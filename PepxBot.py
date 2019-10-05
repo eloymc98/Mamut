@@ -9,6 +9,7 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 import logging
+import os
 
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
@@ -24,11 +25,12 @@ TOKEN_PEPXBOT = '870743532:AAGXJayURrkNWU0FkePr7GK5k6FPkY156Z4'
 '''
 Configuration of states, default values, etc.
 '''
-INTRO, PHOTO, INFO, YELLOW, BLUE, GREEN, GREY, BROWN, SPECIAL = range(9)
+INTRO, PHOTO, INFO = range(3)
 
 dumpster_keyboard = [['Yellow', 'Blue'],
-                      ['Green', 'Grey'],
-                      ['Brown', 'Special']]
+                     ['Green', 'Grey'],
+                     ['Brown', 'Special']
+                     ['Photo']]
 dumpsters = ReplyKeyboardMarkup(dumpster_keyboard, one_time_keyboard=True)
 
 function_keyboard = [['Where do I dump it?', 'What should I throw in each dumpster?']]
@@ -37,6 +39,11 @@ function_chooser = ReplyKeyboardMarkup(function_keyboard)
 '''
 Utility functions
 '''
+
+
+def easter_egg(update, context):
+    emojis_cringe = '\U0001F630'[:-4]
+    return
 
 
 # Resolve message data to a readable name
@@ -49,13 +56,18 @@ def get_name(user):
         except (NameError, AttributeError):
             logger.info("No username or first name.. wtf")
             return ""
+
     return name
+
 
 '''
 Bot states' handlers
 '''
+
+
 def option_menu(update, context):
     update.message.reply_text("How can I help you?", reply_markup=function_chooser)
+
     return INTRO
 
 
@@ -68,23 +80,63 @@ def start(update, context):
 
     return option_menu(update, context)
 
+
 def photo_query(update, context):
     update.message.reply_text('Ok! Send me a picture of the waste, please.')
-    
+
     return PHOTO
 
 
 def dumpster_select(update, context):
-    update.message.reply_text('Ok! Which dumpster would you like to know about?')
+    update.message.reply_text('Ok! Which dumpster would you like to know about?', reply_markup=dumpster_keyboard)
 
     return INFO
 
+
 def process_photo(update, context):
-    caca = update.message.from_user
-    logger.info(caca)
-    update.message.reply_text('\U0001F601')
+    path = r'C:\Users\Mephistopheles\Pictures'
+    filename = update.message.photo[-1].file_id
+    context.bot.getFile(filename).download(os.path.join(path, filename + '.jpg'))
+    update.message.reply_text()
 
     return option_menu(update, context)
+
+
+# Dumpers info
+def yellow_info(update, context):
+    update.message.reply_text("y")
+
+    return INFO
+
+
+def blue_info(update, context):
+    update.message.reply_text("b")
+
+    return INFO
+
+
+def green_info(update, context):
+    update.message.reply_text("gree")
+
+    return INFO
+
+
+def grey_info(update, context):
+    update.message.reply_text("g")
+
+    return INFO
+
+
+def brown_info(update, context):
+    update.message.reply_text("")
+
+    return INFO
+
+
+def special_info(update, context):
+    update.message.reply_text("s")
+
+    return INFO
 
 
 def main():
@@ -97,27 +149,18 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            INTRO: [MessageHandler(Filters.regex('^Where do I dump it?'), photo_query), 
+            INTRO: [MessageHandler(Filters.regex('^Where do I dump it?'), photo_query),
                     MessageHandler(Filters.regex('^What should I throw in each dumpster?'), dumpster_select)],
             PHOTO: [MessageHandler(Filters.photo, process_photo),
                     MessageHandler(Filters.all, photo_query)],
-            #INFO: [MessageHandler(Filters.regex('[Y|y]ellow'), yellow_info),
-            #      MessageHandler(Filters.regex('[B|b]lue'), blue_info),
-            #     MessageHandler(Filters.regex('[G|g]reen'), ),
-            #       MessageHandler(Filters.regex('[G|g]rey'), ),
-            #       MessageHandler(Filters.regex('[B|b]rown'), ),
-            #       MessageHandler(Filters.regex('[S|s]pecial'), )]
-            #                                      intr_medicine)],
-            #           YELLOW: [MessageHandler(Filters.text, send_new_medicine)],
-            #           BLUE: [MessageHandler(Filters.regex('^YES$'), choose_function),
-            #                  MessageHandler(Filters.regex('^NO$'), intr_medicine)
-            #                 ],
-            #        GREEN: [MessageHandler(Filters.regex('^YES$'), choose_function),
-            #               MessageHandler(Filters.regex('^NO$'), delete_reminder)
-            #              ],
-            #     GREY: [MessageHandler(Filters.text, get_medicine_CN)],
-            #    BROWN: [MessageHandler(Filters.regex('^YES$'), choose_function)]
-            #   SPECIAL: [MessageHandler()]'''
+            INFO: [MessageHandler(Filters.regex('[Y|y]ellow'), yellow_info),
+                   MessageHandler(Filters.regex('[B|b]lue'), blue_info),
+                   MessageHandler(Filters.regex('[G|g]reen'), green_info),
+                   MessageHandler(Filters.regex('[G|g]rey'), grey_info),
+                   MessageHandler(Filters.regex('[B|b]rown'), brown_info),
+                   MessageHandler(Filters.regex('[S|s]pecial'), special_info),
+                   MessageHandler(Filters.regex('Photo'), photo_query)]
+
         },
         fallbacks=[MessageHandler(Filters.regex('^Exit$'), exit)]
 
