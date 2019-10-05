@@ -18,12 +18,18 @@ class CNN:
 
     def __init__(self):
         self.learn = load_learner(r'C:\Users\Mephistopheles\Documents\Mamut\models')
+        self.prediction_recycle = {"plastic": "yellow", "paper": "blue", "metal": "yellow", "green_point": "green_point",
+                                   "glass": "green", "cardboard": "blue", "brown": "brown"}
 
     def predict_image(self, img_path):
         img = open_image(img_path)
         pred_class, pred_idx, outputs = self.learn.predict(img)
         print(pred_class)
-        return pred_class
+        return self.predict_to_recycle(str(pred_class))
+
+    def predict_to_recycle(self, prediction):
+        recycle_string = f'This is {prediction}, you ought to throw into the {self.prediction_recycle[prediction]} dumper'
+        return recycle_string
 
 
 if __name__ == '__main__':

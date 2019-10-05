@@ -103,8 +103,9 @@ def process_photo(update, context, learner):
     context.bot.getFile(filename).download(image_path)
 
     # Predict with learner
-    prediction_result = learner.predict(image_path)
+    prediction_result = learner.predict_image(image_path)
     update.message.reply_text(prediction_result)
+    update.message.reply_text('\U0001F609')
 
     return option_menu(update, context)
 
