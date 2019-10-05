@@ -10,6 +10,7 @@ bot.
 """
 import logging
 import os
+import time
 
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
@@ -27,10 +28,10 @@ Configuration of states, default values, etc.
 '''
 INTRO, PHOTO, INFO = range(3)
 
-dumpster_keyboard = [['Yellow', 'Blue'],
-                     ['Green', 'Grey'],
-                     ['Brown', 'Special']
-                     ['Photo']]
+dumpster_keyboard = [['Containers\n'+u'\U0001F49B', 'Paper\n'+u'\U0001F499'],
+                     ['Glass\n'+u'\U0001F49A', 'Other\n'+u'\U0001F95A'],
+                     ['Organic\n'+u'\U0001F45D', 'Green Point\n'+u'\U0000267B'],
+                     ['Take a pic\n'+u'\U0001F4F8']]
 dumpsters = ReplyKeyboardMarkup(dumpster_keyboard, one_time_keyboard=True)
 
 function_keyboard = [['Where do I dump it?', 'What should I throw in each dumpster?']]
@@ -88,7 +89,7 @@ def photo_query(update, context):
 
 
 def dumpster_select(update, context):
-    update.message.reply_text('Ok! Which dumpster would you like to know about?', reply_markup=dumpster_keyboard)
+    update.message.reply_text('Ok! Which dumpster would you like to know about?', reply_markup=dumpsters)
 
     return INFO
 
@@ -104,41 +105,82 @@ def process_photo(update, context):
 
 # Dumpers info
 def yellow_info(update, context):
-    update.message.reply_text("Inside the yellow container, we must deposit: plastic bottles and containers, metal containers and briks such as:\n- Plastic bottles\n- Cans\n- Plastic, metal and sheet metal caps\n- Aluminum trays\n- Film and aluminum foil\n- Aerosol sprays\n- Deodorant cans\n- Plastic bags (except garbage bags)\n- Tubs and yogurt lids\n- Briks: of milk, juices, soups, etc.\n- Cork trays\n- Toothpaste tubes")
+    update.message.reply_text("Inside the yellow container, we must deposit: plastic bottles and containers, metal containers and briks such as:")
+    update.message.reply_text('- Plastic bottles\n- Cans\n- Plastic, metal and sheet metal caps\
+        \n- Aluminum trays\n- Film and aluminum foil\n- Aerosol sprays\n- Deodorant cans\n- Plastic bags (except garbage bags)\
+        \n- Tubs and yogurt lids\n- Briks: of milk, juices, soups, etc.\n- Cork trays\n- Toothpaste tubes')
 
     return INFO
 
 
 def blue_info(update, context):
-    update.message.reply_text("b")
+    update.message.reply_text("The blue container is the container intended for recycling paper and cardboard \
+        containers. Among these wastes are:")
+    update.message.reply_text('- Paper or cardboard bags\n- Cardboard boxes\n- Shoe boxes\n- Cardboard egg cups\n- Notebooks\
+        \n- Promotional leaflet\n- Paper\n- Gift Paper\n- Newspapers\n- Magazine\n- Envelopes\n- Cardboard tubes of toilet paper and kitchen')
 
     return INFO
 
 
 def green_info(update, context):
-    update.message.reply_text("gree")
+    update.message.reply_text("The green container is the container for the recycling of glass. Among these wastes are:")
+    update.message.reply_text('- Glass bottles (juices, soft drinks, wines, spirits, ciders, sauces, oil, etc.)\n\
+        - Glass jars (both for drinks and canned food, as for perfumes, colognes, etc.')
 
     return INFO
 
 
 def grey_info(update, context):
-    update.message.reply_text("g")
+    update.message.reply_text("¿What should I deposit in the GRAY container?\n")
+    update.message.reply_text('- Fraction remainder (waste for which there is no specific container on public roads)')
 
     return INFO
 
 
 def brown_info(update, context):
-    update.message.reply_text("")
+    update.message.reply_text("All organic waste must be deposited, that is, those compounds of biodegradable matter such as:")
+    update.message.reply_text('- Remains of fruit and vegetables\n- Leftovers of meat and fish\n- Eggshells, shellfish, nuts, etc.\n\
+        - Other remains of meals\n- Coffee grounds and infusions\n- Cork stoppers that do not have \
+        plastic additives\n- Matches and sawdust\n- Kitchen paper and dirty napkins\n- Small traces of gardening.')
 
     return INFO
 
 
 def special_info(update, context):
-    update.message.reply_text("s")
+    update.message.reply_text("It serves to deposit all waste that is not accepted in ordinary containers:")
+    update.message.reply_text('- Tires\n- Fluorescent and mercury vapor lamps\n- Solvents\n- Paints and varnishes\n- Batteries\n\
+        - Appliances containing dangerous substances\n- Used mineral oils\n- Furniture and others\n- Appliances that do \
+        not contain hazardous substances\n- Electronic scrap (computers, small appliances, electronic devices, etc.)')
+
+    return INFO
+
+'''
+def yellow_curious(update, context):
+    update.message.reply_text(bot.send_photo(chat_id=chat_id, photo=open('descargas/', 'rb')))
 
     return INFO
 
 
+def blue_curious(update, context):
+    return INFO
+
+
+def green_curious(update, context):
+    return INFO
+
+
+def grey_curious(update, context):
+    return INFO
+
+
+def brown_curious(update, context):
+    return INFO
+
+
+def special_curious(update, context):
+    return INFO
+
+'''
 def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -147,19 +189,18 @@ def main():
     conv_handler = ConversationHandler(
         allow_reentry=True,
         entry_points=[CommandHandler('start', start)],
-
         states={
             INTRO: [MessageHandler(Filters.regex('^Where do I dump it?'), photo_query),
                     MessageHandler(Filters.regex('^What should I throw in each dumpster?'), dumpster_select)],
             PHOTO: [MessageHandler(Filters.photo, process_photo),
                     MessageHandler(Filters.all, photo_query)],
-            INFO: [MessageHandler(Filters.regex('[Y|y]ellow'), yellow_info),
-                   MessageHandler(Filters.regex('[B|b]lue'), blue_info),
-                   MessageHandler(Filters.regex('[G|g]reen'), green_info),
-                   MessageHandler(Filters.regex('[G|g]rey'), grey_info),
-                   MessageHandler(Filters.regex('[B|b]rown'), brown_info),
-                   MessageHandler(Filters.regex('[S|s]pecial'), special_info),
-                   MessageHandler(Filters.regex('Photo'), photo_query)]
+            INFO: [MessageHandler(Filters.regex('Containers\n'+u'\U0001F49B'), yellow_info),
+                   MessageHandler(Filters.regex('Paper\n'+u'\U0001F499'), blue_info),
+                   MessageHandler(Filters.regex('Glass\n'+u'\U0001F49A'), green_info),
+                   MessageHandler(Filters.regex('Other\n'+u'\U0001F95A'), grey_info),
+                   MessageHandler(Filters.regex('Organic\n'+u'\U0001F45D'), brown_info),
+                   MessageHandler(Filters.regex('Green Point\n'+u'\U0000267B'), special_info),
+                   MessageHandler(Filters.regex('Take a pic\n'+u'\U0001F4F8'), photo_query)]
 
         },
         fallbacks=[MessageHandler(Filters.regex('^Exit$'), exit)]
