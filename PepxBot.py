@@ -15,6 +15,7 @@ import time
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 from ImageRecognition import CNN
+from functools import partial
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger('PepxBot')
@@ -95,11 +96,15 @@ def dumpster_select(update, context):
     return INFO
 
 
-def process_photo(update, context):
-    path = r'C:\Users\Mephistopheles\Pictures'
+def process_photo(update, context, learner):
+    #Get the image from telegram server
     filename = update.message.photo[-1].file_id
-    context.bot.getFile(filename).download(os.path.join(path, filename + '.jpg'))
-    update.message.reply_text()
+    image_path = os.path.join(r'C:\Users\Mephistopheles\Pictures', filename + '.jpg')
+    context.bot.getFile(filename).download(image_path)
+
+    #prediction from learner
+    prediction_result = learner.predict(image_path)
+    update.message.reply_text(prediction_result)
 
     return option_menu(update, context)
 
@@ -183,6 +188,9 @@ def special_curious(update, context):
 
 '''
 def main():
+    #Initialize the learner for deeplearning task
+    learner = CNN()
+
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     updater = Updater(token=TOKEN_PEPXBOT, use_context=True, workers=50)
@@ -193,7 +201,7 @@ def main():
         states={
             INTRO: [MessageHandler(Filters.regex('^Where do I dump it?'), photo_query),
                     MessageHandler(Filters.regex('^What should I throw in each dumpster?'), dumpster_select)],
-            PHOTO: [MessageHandler(Filters.photo, process_photo),
+            PHOTO: [MessageHandler(Filters.photo, partial(process_photo, learner=learner)),
                     MessageHandler(Filters.all, photo_query)],
             INFO: [MessageHandler(Filters.regex('Containers\n'+u'\U0001F49B'), yellow_info),
                    MessageHandler(Filters.regex('Paper\n'+u'\U0001F499'), blue_info),
