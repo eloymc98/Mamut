@@ -19,8 +19,8 @@ class CNN:
     def __init__(self):
         self.learn = load_learner(r'C:\Users\Mephistopheles\Documents\Mamut\models')
 
-    def predict_image(self, img_path):
-        img = open_image(img_path)
+    def predict_image(self):
+        img = open_image()
         pred_class, pred_idx, outputs = self.learn.predict(img)
         print(pred_class)
         return pred_class
