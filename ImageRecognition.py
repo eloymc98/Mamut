@@ -17,10 +17,10 @@ import seaborn as sns
 class CNN:
 
     def __init__(self):
-        self.learn = load_learner('/Users/eloymarinciudad/Downloads')
+        self.learn = load_learner(r'C:\Users\Mephistopheles\Documents\Mamut\models')
 
-    def predict_image(self):
-        img = open_image('/Users/eloymarinciudad/Downloads/paper1.jpeg')
+    def predict_image(self, img_path):
+        img = open_image(img_path)
         pred_class, pred_idx, outputs = self.learn.predict(img)
         print(pred_class)
         return pred_class
