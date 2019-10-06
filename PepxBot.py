@@ -92,6 +92,8 @@ def process_photo(update, context, learner):
     update.message.reply_text(prediction_result)
     update.message.reply_text('\U0001F609')
 
+    os.remove(image_path)
+
     return option_menu(update, context)
 
 
