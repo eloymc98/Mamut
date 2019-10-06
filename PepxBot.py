@@ -11,6 +11,7 @@ bot.
 import logging
 import os
 import time
+import random
 
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup   
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
@@ -35,6 +36,22 @@ dumpster_keyboard = [['Containers\n'+u'\U0001F49B', 'Paper\n'+u'\U0001F499'],
                      ['Organic\n'+u'\U0001F45D', 'Green Point\n'+u'\U0000267B'],
                      ['Take a pic\n'+u'\U0001F4F8']]
 dumpsters = ReplyKeyboardMarkup(dumpster_keyboard, one_time_keyboard=True)
+curious_dict = {
+    'YELLOW': ['40 PET plastic bottles can become a fleece if you throw them in the right container','80 soda cans result in a bicycle tire if properly recycled','550 aluminum cans become a chair once recycled','6 briks of milk give rise to a shoebox','To get a recycled cooking pot you need 8 canning cans','To get a shirt you only need 22 plastic bottles'],
+    'BLUE': ['8 boxes of cereals generate a book of recycled material','Paper can be recycled up to 7 times','Magazine paper is the most difficult one to recycle','Recycled paper is often used to make cardboard and wrapping paper, but you can also find sheets of recycled paper'],
+    'GREEN': ['Glass can be recycled infinitely without losing any of its properties','It will usually be transformed into a new container, although household items can also be made, such as a vase, among many other things','Although they seem to go to the green container, the mirrors, the ashtrays and the dishes go to the green point'],
+    'BROWN': ['Compost is the fertilizer formed by the mixture of fermented organic waste and mineral materials','Any vegetable that ends up in the soil and rots with oxygen participation is transformed into compost. However, the one that does not have the help of oxygen, becomes peat (light coal of earthy and spongy appearance) and finally in coal by the effect of pressure','It is said that the first compost made by the human being and not nature was made by Sir Albert Howard, who prepared his compost with a layer of plant material of 15 centimeters','More than 40% of our garbage bags include bio-waste that is one hundred percent usable','Hair, cigarette butts, chewing gum, dust, wipes, etc. should not be deposited in this container'],
+    'GREY': ['Many times, the question may arise as to whether, having been part of the same bucket, they will not get together in the garbage trucks. The answer is no. The trucks have a compartment system inside, which allows the collection of different waste in the same truck without mixing','Are the residues mixed in the recycling plant? No, although it is inevitable that in selective collection, some arrive at the plant with impurities, but these are separated and removed before treatment'],
+    'SPECIAL': ['There are 1,739 fixed clean points in Spain, and 189 mobile, being and Catalonia in the first place, and in second Castilla la Mancha, the autonomous communities that most possess','The average ratio in Spain of Total Clean Points is 24,445 inhabitants per clean point','The most significant flow by weight of waste at clean points belongs to debris, and in cities, the contribution is lower per inhabitant compared to other places']
+}
+curious_pic_dict = {
+    'YELLOW': [r'/media/eric/64C7-8922/Curious/Yellow1.jpg',r'/media/eric/64C7-8922/Curious/Yellow2.jpg',r'/media/eric/64C7-8922/Curious/Yellow3.jpg',r'/media/eric/64C7-8922/Curious/Yellow4.jpg',r'/media/eric/64C7-8922/Curious/Yellow5.jpg',r'/media/eric/64C7-8922/Curious/Yellow6.jpg'],
+    'BLUE': [r'/media/eric/64C7-8922/Curious/Blue1.jpg'],
+    'GREEN': [],
+    'BROWN': [],
+    'GREY': [],
+    'SPECIAL': []
+}
 def build_menu(buttons,
                n_cols,
                header_buttons=None,
@@ -214,42 +231,62 @@ reply_markup=yesno_sp_markup)
 
 
 def yellow_curious(update, context):
-    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text='Patata amarilla')
+    random_number= random.randint(0, len(curious_dict['YELLOW'])-1)
+
+    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=curious_dict['YELLOW'][random_number])
+    if random_number< len(curious_pic_dict['YELLOW']):
+        context.bot.send_photo(chat_id=update.callback_query.message.chat_id, photo=open(curious_pic_dict['YELLOW'][random_number], 'rb'))
     context.bot.send_message(chat_id=update.callback_query.message.chat_id, text="More info?",reply_markup=yesno_y_markup)
 
     return
 
 
 def blue_curious(update, context):
-    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text='Patata azul')
+    random_number= random.randint(0, len(curious_dict['BLUE'])-1)
+    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=curious_dict['BLUE'][random_number])
+    if random_number< len(curious_pic_dict['BLUE']):
+        context.bot.send_photo(chat_id=update.callback_query.message.chat_id, photo=open(curious_pic_dict['BLUE'][random_number], 'rb'))
+
     context.bot.send_message(chat_id=update.callback_query.message.chat_id, text="More info?",reply_markup=yesno_bl_markup)
 
     return
 
 
 def green_curious(update, context):
-    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text='Patata green')
+    random_number= random.randint(0, len(curious_dict['GREEN'])-1)
+    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=curious_dict['GREEN'][random_number])
+    if random_number< len(curious_pic_dict['GREEN']):
+        context.bot.send_photo(chat_id=update.callback_query.message.chat_id, photo=open(curious_pic_dict['GREEN'][random_number], 'rb'))
     context.bot.send_message(chat_id=update.callback_query.message.chat_id, text="More info?",reply_markup=yesno_green_markup)
 
     return
 
 
 def grey_curious(update, context):
-    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text='Patata grey')
+    random_number= random.randint(0, len(curious_dict['GREY'])-1)
+    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=curious_dict['GREY'][random_number])
+    if random_number< len(curious_pic_dict['GREY']):
+        context.bot.send_photo(chat_id=update.callback_query.message.chat_id, photo=open(curious_pic_dict['GREY'][random_number], 'rb'))
     context.bot.send_message(chat_id=update.callback_query.message.chat_id, text="More info?",reply_markup=yesno_grey_markup)
 
     return
 
 
 def brown_curious(update, context):
-    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text='Patata marron')
+    random_number= random.randint(0, len(curious_dict['BROWN'])-1)
+    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=curious_dict['BROWN'][random_number])
+    if random_number< len(curious_pic_dict['BROWN']):
+        context.bot.send_photo(chat_id=update.callback_query.message.chat_id, photo=open(curious_pic_dict['BROWN'][random_number], 'rb'))
     context.bot.send_message(chat_id=update.callback_query.message.chat_id, text="More info?",reply_markup=yesno_br_markup)
 
     return
 
 
 def special_curious(update, context):
-    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text='Patata especial, como Ralph Wiggum. SOY ESPECIAAL!')
+    random_number= random.randint(0, len(curious_dict['SPECIAL'])-1)
+    context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=curious_dict['SPECIAL'][random_number])
+    if random_number< len(curious_pic_dict['SPECIAL']):
+        context.bot.send_photo(chat_id=update.callback_query.message.chat_id, photo=open(curious_pic_dict['SPECIAL'][random_number], 'rb'))
     context.bot.send_message(chat_id=update.callback_query.message.chat_id, text="More info?",reply_markup=yesno_sp_markup)
 
     return
@@ -268,7 +305,7 @@ def inline_handler(update, context):
 
 def main():
     #Init learner that will predict the waste dumper
-    learner = CNN()
+    # learner = CNN()
 
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -280,8 +317,8 @@ def main():
         states={
             INTRO: [MessageHandler(Filters.regex('^Where do I dump it?'), photo_query),
                     MessageHandler(Filters.regex('^What should I throw in each dumpster?'), dumpster_select)],
-            PHOTO: [MessageHandler(Filters.photo, partial(process_photo, learner=learner)),
-                    MessageHandler(Filters.all, photo_query)],
+            # PHOTO: [MessageHandler(Filters.photo, partial(process_photo, learner=learner)),
+            #         MessageHandler(Filters.all, photo_query)],
             INFO: [MessageHandler(Filters.regex('Containers\n'+u'\U0001F49B'), yellow_info),
                    MessageHandler(Filters.regex('Paper\n'+u'\U0001F499'), blue_info),
                    MessageHandler(Filters.regex('Glass\n'+u'\U0001F49A'), green_info),
