@@ -16,8 +16,9 @@ class CNN:
         return self.predict_to_recycle(str(pred_class))
 
     def predict_to_recycle(self, prediction):
-        recycle_string = f'This is {prediction if not "green_point" else "special"}, you ought to throw into the ' \
+        recycle_string = f'This is {prediction if prediction != "green_point" else "special"}, you ought to throw into the ' \
                          f'{self.prediction_recycle[prediction]}'
+        #recycle_string = f'You ought to throw into the {self.prediction_recycle[prediction]}'
         return recycle_string
 
 

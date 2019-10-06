@@ -54,10 +54,10 @@ def option_menu(update, context):
 
 
 def start(update, context):
-    logger.info('User has connected to PepxBot: /start')
+    logger.info('User has connected to EcoBot: /start')
     user_id = update.message.from_user.id
     name = get_name(update.message.from_user)
-    context.bot.send_message(chat_id=update.message.chat_id, text=("Welcome " + name + " ! My name is Pepx"))
+    context.bot.send_message(chat_id=update.message.chat_id, text=("Welcome " + name + " ! My name is EcoBot"+u'\U0001F30D'))
     logger.info('Name of user is: ' + name + " and its ID is " + str(user_id))
 
     return option_menu(update, context)
@@ -139,6 +139,7 @@ def main():
         fallbacks=[MessageHandler(Filters.regex('^[E|e]xit$'), exit_chat)]
 
     )
+
 
     dp.add_handler(conv_handler)
     updater.start_polling()
