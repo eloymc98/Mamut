@@ -17,9 +17,9 @@ import seaborn as sns
 class CNN:
 
     def __init__(self):
-        self.learn = load_learner(r'C:\Users\Mephistopheles\Documents\Mamut\models')
         self.prediction_recycle = {"plastic": "yellow", "paper": "blue", "metal": "yellow", "green_point": "green_point",
                                    "glass": "green", "cardboard": "blue", "brown": "brown"}
+        self.learn = load_learner(r'C:\Users\Mephistopheles\Documents\Mamut\model2')
 
     def predict_image(self, img_path):
         img = open_image(img_path)

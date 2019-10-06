@@ -12,15 +12,10 @@ import logging
 import os
 import time
 
-<<<<<<< HEAD
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup   
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
-=======
-from telegram import ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 from ImageRecognition import CNN
 from functools import partial
->>>>>>> 4b4ffe400e83ce6bd78284ca2a6aeb94beb2a198
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger('PepxBot')
@@ -265,8 +260,10 @@ yesno_dict = {'yes_y': yellow_curious, 'yes_bl': blue_curious, 'yes_green': gree
 def inline_handler(update, context):
     if yesno_dict[str(update.callback_query.data)] is not None:
         yesno_dict[str(update.callback_query.data)](update, context)
+        logger.info("buenos días")
         return MORE_INFO
     else:
+        logger.info("malos días")
         return INTRO
 
 def main():
